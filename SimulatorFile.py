@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Filename:    File.py
-# Date:        27 November 2018
+# Filename:    SimulatorFile.py
+# Date:        28 November 2018
 # Description: Class representing a file which resides on one or more Servers and is requested by Clients
+
+class SimulatorFile:
+    pass
