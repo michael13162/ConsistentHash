@@ -42,3 +42,11 @@ class Simulator:
                 file_idx = client.request_sequence[timestep]
                 if file_idx is not None:
                     client.make_request(self.test_case.files[file_idx])
+
+            for cache in self.caches:
+                print(cache.token)
+                print("\t{}".format(cache.used_resources))
+                print("\t{}".format(cache.total_request_counter))
+                print("\t{}".format(cache.accepted_requests_counter))
+                print()
+            pass
