@@ -20,6 +20,12 @@
 
 
 class SimulatorFile:
+    SALT1 = "JSM"
+    SALT2 = "WRZ"
+
+    def __init__(self, key: str, size: int):
+        self.key = key
+        self.size = size
 
     def hash1(self) -> int:
         pass
