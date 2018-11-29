@@ -59,7 +59,7 @@ class Client:
         cache = cache1 if response1.load < response2.load else cache2
 
         # Make request
-        cache.handle_request(None)
+        cache.handle_request(file)
 
     def consistent_hash(self, hash: int) -> Cache:
         """
@@ -76,3 +76,4 @@ class Client:
             if hash > cache.token:
                 # This hash value falls into the range of this cache
                 return cache
+        return self.visible_caches[-1]
