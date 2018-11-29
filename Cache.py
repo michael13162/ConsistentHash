@@ -14,20 +14,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Filename:    Client.py
+# Filename:    Cache.py
 # Date:        27 November 2018
-# Description: Class representing a client which makes requests against a Cache
+# Description: Class representing a cache which hosts Files and accepts requests from Clients
+
+from collections import namedtuple
+import typing
 
 from SimulatorFile import SimulatorFile
 
 
-class Client:
+LoadReply = namedtuple('LoadReply', ['load', 'has_file'])
 
-    def __init__(self):
-        pass
 
-    def make_request(self, file: SimulatorFile):
-        # Get hash codes from file
-        # Select server (Call 'accept_request' to both)
-        # Make request
+class Cache:
+
+    def __init__(self, total_resources: float):
+        self.total_request_counter = 0
+        self.accpted_request_counter = 0
+        self.total_resources = total_resources
+        self.requests_per_file = {}
+
+    def accept_request(self, file: SimulatorFile) -> LoadReply:
+        self.total_request_counter += 1
+
+        return LoadReply(None, True)
+
+    def handle_request(self, bandwidth: float):
         pass

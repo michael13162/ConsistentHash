@@ -18,5 +18,11 @@
 # Date:        28 November 2018
 # Description: Class representing a file which resides on one or more Servers and is requested by Clients
 
+
 class SimulatorFile:
-    pass
+
+    def hash1(self) -> int:
+        pass
+
+    def hash2(self) -> int:
+        pass
