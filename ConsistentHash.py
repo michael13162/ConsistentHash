@@ -21,16 +21,36 @@
 # Description: Main executable for the ConsistentHash project
 
 import argparse
-import json
 
 from Simulator import Simulator
 from TestCase import TestCase
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser("Fall 2018 CS5150/CS6150 Consistent Hashing Project Simulator")
+    parser.add_argument("--file-size", action='store', type=int, required=True,
+                        help="Simulated request file size (Bytes)")
+    parser.add_argument("--file-count", action='store', type=int, required=True,
+                        help="Number of distinct files")
+    parser.add_argument("--num-clients", action='store', type=int, required=True,
+                        help="Number of simulated clients")
+    parser.add_argument("--num-caches", action='store', type=int, required=True,
+                        help="Number of simulated caches")
+    parser.add_argument("--simulation-length", action='store', type=int, required=True,
+                        help="Number of simulation steps")
+    parser.add_argument("--cache-resources", action='store', type=int, required=True,
+                        help="Available bandwidth on each cache")
 
-case = TestCase.generate_test_case(100, 20, 20, 5, 10, 1000)
+    args = parser.parse_args()
 
-simulator = Simulator(case)
+    case = TestCase.generate_test_case(
+        file_size=args.file_size,
+        file_count=args.file_count,
+        num_clients=args.num_clients,
+        num_caches=args.num_caches,
+        simulation_length=args.simulation_length,
+        cache_resources=args.cache_resources,
+    )
 
-simulator.run()
+    simulator = Simulator(case)
 
-pass
+    simulator.run()
