@@ -18,6 +18,8 @@
 # Date:        28 November 2018
 # Description: Class which runs one ConsistentHash simulation
 
+from Cache import Cache
+from Client import Client
 from TestCase import TestCase
 
 
@@ -25,7 +27,18 @@ class Simulator:
 
     def __init__(self, test_case: TestCase):
         self.test_case = test_case
+        self.clients = [None] * test_case.num_clients
+        self.caches = [None] * test_case.num_caches
 
     def run(self):
         # Do the simulator loop, for as long as the TestCase specifies
-        raise NotImplementedError
+        for timestep in range(self.test_case.simulation_length):
+            # "Reset" all clients and caches
+            self.caches = [Cache(resources, token) for resources, token in zip(self.test_case.cache_resources, self.test_case.cache_tokens)]
+            self.clients = [Client(self.caches, requests) for requests in self.test_case.request_sequences]
+
+            # Run simulation step
+            for client in self.clients:
+                file_idx = client.request_sequence[timestep]
+                if file_idx is not None:
+                    client.make_request(self.test_case.files[file_idx])
