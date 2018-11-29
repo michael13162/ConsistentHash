@@ -18,19 +18,58 @@
 # Date:        28 November 2018
 # Description: Class representing all the parameters of an individual test case
 
-from typing import List
+import random
+from typing import List, Optional
 
-from SimulatorFile import SimulatorFile
+import SimulatorFile
 
 
 class TestCase:
 
     @staticmethod
-    def generate_test_case() -> 'TestCase':
+    def generate_test_case(file_size: int,
+                           file_count: int,
+                           num_clients: int,
+                           num_caches: int,
+                           simulation_length: int,
+                           cache_resources: int) -> 'TestCase':
         """
         Generate a new, random test case
         """
-        raise NotImplementedError
+        files = [SimulatorFile.generate_random_file(file_size) for i in range(file_count)]
 
-    def __init__(self, files: List[SimulatorFile], ):
+        # Generate sequence of client file requests
+        request_sequences = [[]] * num_clients
+        for client in range(num_clients):
+            request_sequence = [None] * simulation_length
+            # Test code: Every client has an 80% chance of requesting a file on a particular timestep
+            # Each file has a uniform-random chance to be selected
+            # TODO: Select files based on realistic distribution
+            for timestep in range(simulation_length):
+                file_requested = random.random() < 0.8
+                file = random.randint(0, len(files) - 1)
+                request_sequence[timestep] = file if file_requested else None
+            request_sequences[client] = request_sequence
+
+        # Generate tokens for each cache
+        cache_tokens = [random.randint(0, SimulatorFile.MAX_HASH_VALUE) for cache in range(num_caches)]
+
+        cache_resources = [cache_resources] * num_caches
+
+        return TestCase(files, num_clients, num_caches, simulation_length, request_sequences, cache_tokens, cache_resources)
+
+    def __init__(self,
+                 files: List[SimulatorFile.SimulatorFile],
+                 num_clients: int,
+                 num_caches: int,
+                 simulation_length: int,
+                 request_sequences: List[List[Optional[int]]],
+                 cache_tokens: List[int],
+                 cache_resources: List[float]):
         self.files = files
+        self.num_clients = num_clients
+        self.num_caches = num_caches
+        self.simulation_length = simulation_length
+        self.request_sequences = request_sequences
+        self.cache_tokens = cache_tokens
+        self.cache_resources = cache_resources
