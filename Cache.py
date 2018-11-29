@@ -29,10 +29,11 @@ LoadReply = namedtuple('LoadReply', ['load', 'has_file'])
 
 class Cache:
 
-    def __init__(self, total_resources: float):
+    def __init__(self, total_resources: float, token: int):
         self.total_request_counter = 0
         self.accpted_request_counter = 0
         self.total_resources = total_resources
+        self.token = token
         self.requests_per_file = {}
 
     def accept_request(self, file: SimulatorFile) -> LoadReply:
