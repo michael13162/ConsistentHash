@@ -37,6 +37,13 @@ class Client:
         self.request_sequence = request_sequence
         pass
 
+    def reset(self):
+        """
+        Clear all per-timestep information in the Client to prepare for the next timestep
+        """
+        # Clients do not store any per-timestep information, as yet!
+        return
+
     def make_request(self, file: SimulatorFile):
         # Get hash codes from file
         hash1: int = file.hash1()

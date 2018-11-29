@@ -27,15 +27,15 @@ class Simulator:
 
     def __init__(self, test_case: TestCase):
         self.test_case = test_case
-        self.clients = [None] * test_case.num_clients
-        self.caches = [None] * test_case.num_caches
+        self.caches = [Cache(resources, token) for resources, token in zip(self.test_case.cache_resources, self.test_case.cache_tokens)]
+        self.clients = [Client(self.caches, requests) for requests in self.test_case.request_sequences]
 
     def run(self):
         # Do the simulator loop, for as long as the TestCase specifies
         for timestep in range(self.test_case.simulation_length):
-            # "Reset" all clients and caches
-            self.caches = [Cache(resources, token) for resources, token in zip(self.test_case.cache_resources, self.test_case.cache_tokens)]
-            self.clients = [Client(self.caches, requests) for requests in self.test_case.request_sequences]
+            # Prepare all clients and caches for the new timestep
+            for cache in self.caches: cache.reset()
+            for client in self.clients: client.reset()
 
             # Run simulation step
             for client in self.clients:
