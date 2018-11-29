@@ -73,7 +73,7 @@ class Client:
         # Linear search to find the proper Cache
         for idx in range(len(self.visible_caches)):
             cache = self.visible_caches[idx]
-            if hash > cache.token:
+            if hash < cache.token:
                 # This hash value falls into the range of this cache
                 return cache
         return self.visible_caches[-1]
