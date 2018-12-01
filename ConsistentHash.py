@@ -26,7 +26,7 @@ from Simulator import Simulator
 from TestCase import TestCase
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser("Fall 2018 CS5150/CS6150 Consistent Hashing Project Simulator")
+    parser = argparse.ArgumentParser("Fall 2018 CS5150/CS6150 Consistent Hashing Project Simulator.  Command to try: python3.6 ConsistentHash.py --file-size=20 --file-count=100000 --num-clients=5000 --num-caches=10 --simulation-length=10 --cache-resources=100000")
     parser.add_argument("--file-size", action='store', type=int, required=True,
                         help="Simulated request file size (Bytes)")
     parser.add_argument("--file-count", action='store', type=int, required=True,
@@ -49,10 +49,23 @@ if __name__ == "__main__":
         num_caches=args.num_caches,
         simulation_length=args.simulation_length,
         cache_resources=args.cache_resources,
+        cuckoo=False
     )
 
     simulator = Simulator(case)
-
     trace = simulator.run()
+    simulator.visualize(trace)
 
+    case = TestCase.generate_test_case(
+        file_size=args.file_size,
+        file_count=args.file_count,
+        num_clients=args.num_clients,
+        num_caches=args.num_caches,
+        simulation_length=args.simulation_length,
+        cache_resources=args.cache_resources,
+        cuckoo=True
+    )
+
+    simulator = Simulator(case)
+    trace = simulator.run()
     simulator.visualize(trace)

@@ -46,7 +46,7 @@ class Simulator:
             for client in self.clients:
                 file_idx = client.request_sequence[timestep]
                 if file_idx is not None:
-                    client.make_request(self.test_case.files[file_idx])
+                    client.make_request(self.test_case.files[file_idx], self.test_case.cuckoo)
 
             for cache in self.caches:
                 trace[cache.token].append((cache.used_resources, cache.total_request_counter, cache.accepted_requests_counter))
@@ -62,11 +62,11 @@ class Simulator:
             ratios.append(loads[len(self.caches) - 1] / loads[0])
 
         print(ratios)
-        
+
         fig = plt.figure()
         plt.plot(ratios)
-        plt.title('Simulation results with ' + str(self.clients) + ' client and ' + str(self.caches) + ' caches')
+        plt.title('Simulation results with ' + str(self.clients) + ' client, ' + str(self.caches) + ' caches, and cuckoo=' + str(self.test_case.cuckoo))
         plt.xlabel('timestep')
         plt.ylabel('max load / min load ratio')
-        fig.savefig('plot.png')
+        fig.savefig('cuckoo_' + str(self.test_case.cuckoo) + '.png')
 

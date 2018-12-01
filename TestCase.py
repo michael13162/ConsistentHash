@@ -32,7 +32,8 @@ class TestCase:
                            num_clients: int,
                            num_caches: int,
                            simulation_length: int,
-                           cache_resources: int) -> 'TestCase':
+                           cache_resources: int,
+                           cuckoo: bool) -> 'TestCase':
         """
         Generate a new, random test case
         """
@@ -56,7 +57,7 @@ class TestCase:
 
         cache_resources = [cache_resources] * num_caches
 
-        return TestCase(files, num_clients, num_caches, simulation_length, request_sequences, cache_tokens, cache_resources)
+        return TestCase(files, num_clients, num_caches, simulation_length, request_sequences, cache_tokens, cache_resources, cuckoo)
 
     def __init__(self,
                  files: List[SimulatorFile.SimulatorFile],
@@ -65,7 +66,8 @@ class TestCase:
                  simulation_length: int,
                  request_sequences: List[List[Optional[int]]],
                  cache_tokens: List[int],
-                 cache_resources: List[float]):
+                 cache_resources: List[float],
+                 cuckoo: bool):
         self.files = files
         self.num_clients = num_clients
         self.num_caches = num_caches
@@ -73,3 +75,4 @@ class TestCase:
         self.request_sequences = request_sequences
         self.cache_tokens = cache_tokens
         self.cache_resources = cache_resources
+        self.cuckoo = cuckoo
