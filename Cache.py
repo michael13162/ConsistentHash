@@ -29,13 +29,16 @@ LoadReply = namedtuple('LoadReply', ['load', 'has_file'])
 
 class Cache:
 
-    def __init__(self, total_resources: float, token: int):
+    def __init__(self, total_resources: float, token: int, misses_to_add: int, files: dict):
         self.total_request_counter = 0
         self.accepted_requests_counter = 0
         self.used_resources = 0
         self.total_resources = total_resources
         self.token = token
         self.requests_per_file = {}
+        self.misses_to_add = misses_to_add
+        self.hosted_files = files
+        self.miss_count = 0
 
     def reset(self):
         """
@@ -45,6 +48,7 @@ class Cache:
         self.accepted_requests_counter = 0
         self.used_resources = 0
         self.requests_per_file = {}
+        self.miss_count = 0
         return
 
     def accept_request(self, file: SimulatorFile) -> LoadReply:
@@ -52,7 +56,17 @@ class Cache:
 
         load = (self.used_resources / self.total_resources) * 100
 
-        self.used_resources += file.size // 10
+        self.used_resources += 5
+
+        value = self.hosted_files.get(file.key)
+        if value == None:
+            self.hosted_files[file.key] = 1
+            self.miss_count += 1
+            return LoadReply(load, False)
+        if value < self.misses_to_add:
+            self.hosted_files[file.key] += 1
+            self.miss_count += 1
+            return LoadReply(load, False)
         return LoadReply(load, True)
 
     def handle_request(self, file: SimulatorFile, bandwidth: float = None):

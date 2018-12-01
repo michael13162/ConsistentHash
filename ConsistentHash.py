@@ -21,9 +21,33 @@
 # Description: Main executable for the ConsistentHash project
 
 import argparse
+import random
 
 from Simulator import Simulator
 from TestCase import TestCase
+
+def uniform_distribution(num):
+    '''
+    Creates a uniform distribution of file numbers for request
+
+    :param num: The range of numbers that can be chosen from
+    :return: int -- the chosen number
+    '''
+    return random.randint(0, num - 1)
+
+def inverse_proportional(num):
+    '''
+    Creates an inversely proportional distribution of the returned values
+
+    :param num: The range of numbers that can be chosen from
+    :return: int -- the chosen number
+    '''
+    r = random.random()
+    for i in range(num):
+        if r > 1.0/(i+1):
+            return i
+    return 0  # If it is smaller than the rest, just return 0
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Fall 2018 CS5150/CS6150 Consistent Hashing Project Simulator.  Command to try: python3.6 ConsistentHash.py --file-size=20 --file-count=100000 --num-clients=5000 --num-caches=10 --simulation-length=100 --cache-resources=100000")
@@ -39,6 +63,10 @@ if __name__ == "__main__":
                         help="Number of simulation steps")
     parser.add_argument("--cache-resources", action='store', type=int, required=True,
                         help="Available bandwidth on each cache")
+    parser.add_argument("--visible-caches", action='store', type=int, required=True,
+                        help="Number of caches each client can see")
+    parser.add_argument("--max-misses", action='store', type=int, required=True,
+                        help="Number of cache misses until the file is added to that cache")
 
     args = parser.parse_args()
 
@@ -49,7 +77,10 @@ if __name__ == "__main__":
         num_caches=args.num_caches,
         simulation_length=args.simulation_length,
         cache_resources=args.cache_resources,
-        cuckoo=False
+        num_visible=args.visible_caches,
+        max_misses=args.max_misses,
+        cuckoo=False,
+        distribution_function=uniform_distribution
     )
 
     simulator = Simulator(case)
@@ -63,7 +94,10 @@ if __name__ == "__main__":
         num_caches=args.num_caches,
         simulation_length=args.simulation_length,
         cache_resources=args.cache_resources,
-        cuckoo=True
+        num_visible=args.visible_caches,
+        max_misses=args.max_misses,
+        cuckoo=True,
+        distribution_function=uniform_distribution
     )
 
     simulator = Simulator(case)

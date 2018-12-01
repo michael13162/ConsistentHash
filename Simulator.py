@@ -28,8 +28,21 @@ class Simulator:
 
     def __init__(self, test_case: TestCase):
         self.test_case = test_case
-        self.caches = [Cache(resources, token) for resources, token in zip(self.test_case.cache_resources, self.test_case.cache_tokens)]
-        self.clients = [Client(self.caches, requests) for requests in self.test_case.request_sequences]
+        self.caches = [Cache(resources, token, self.test_case.max_misses, files)
+                       for resources, token, files in zip(self.test_case.cache_resources, self.test_case.cache_tokens, self.test_case.cache_files)]
+
+        # This section should make a list of the caches that a client has, allowing it to be given to a new client
+        visible_caches = [[]] * self.test_case.num_clients
+        num_visible = len(self.test_case.visible_caches[0])
+        for i in range(self.test_case.num_clients):
+            cache_list = [0] * num_visible
+            for j in range(num_visible):
+                cache_num = self.test_case.visible_caches[i][j]
+                cache_list[j] = self.caches[cache_num]
+            visible_caches[i] = cache_list
+
+        self.clients = [Client(vis_caches, requests)
+                        for vis_caches, requests in zip(visible_caches, self.test_case.request_sequences)]
 
     def run(self):
         trace = {}
