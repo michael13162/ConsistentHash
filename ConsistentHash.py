@@ -65,6 +65,8 @@ if __name__ == "__main__":
                         help="Available bandwidth on each cache")
     parser.add_argument("--visible-caches", action='store', type=int, required=True,
                         help="Number of caches each client can see")
+    parser.add_argument("--max-misses", action='store', type=int, required=True,
+                        help="Number of cache misses until the file is added to that cache")
 
     args = parser.parse_args()
 
@@ -76,6 +78,7 @@ if __name__ == "__main__":
         simulation_length=args.simulation_length,
         cache_resources=args.cache_resources,
         visible_caches=args.visible_caches,
+        max_misses=args.max_misses,
         distribution_function=uniform_distribution
     )
 

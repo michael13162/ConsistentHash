@@ -34,6 +34,7 @@ class TestCase:
                            simulation_length: int,
                            cache_resources: int,
                            num_visible: int,
+                           max_misses: int,
                            distribution_function) -> 'TestCase':
         """
         Generate a new, random test case
@@ -43,7 +44,7 @@ class TestCase:
         # Generate sequence of client file requests
         request_sequences = [[]] * num_clients
         visible_caches = [[]] * num_clients
-        all_caches = [x in range(num_caches)]
+        all_caches = [x for x in range(num_caches)]
         for client in range(num_clients):
             request_sequence = [None] * simulation_length
             # Test code: Every client has an 80% chance of requesting a file on a particular timestep
@@ -64,8 +65,29 @@ class TestCase:
 
         cache_resources = [cache_resources] * num_caches
 
-        return TestCase(files, num_clients, num_caches, simulation_length, request_sequences, cache_tokens,
-                        visible_caches, cache_resources)
+        # Generates the file lists used in each cache. They are dictionaries to keep track of which ones are being
+        # missed so we can add them if enough clients request it
+        cache_files = [dict()] * num_caches
+        sorted_tokens = sorted(cache_tokens)
+        for f in files:
+            h1 = f.hash1()
+            h2 = f.hash2()
+            found1 = 0
+            found2 = 0
+            for idx in range(len(cache_tokens)):
+                c_token = sorted_tokens[idx]
+                if not found1 and h1 < c_token:
+                    cache_files[idx][f.key] = max_misses
+                    found1 = 1
+                if not found2 and h2 < c_token:
+                    cache_files[idx][f.key] = max_misses
+                    found2 = 1
+                if found1 and found2:
+                    break
+
+
+        return TestCase(files, num_clients, num_caches, simulation_length, request_sequences, sorted_tokens,
+                        visible_caches, cache_resources, max_misses, cache_files)
 
     def __init__(self,
                  files: List[SimulatorFile.SimulatorFile],
@@ -75,7 +97,9 @@ class TestCase:
                  request_sequences: List[List[Optional[int]]],
                  cache_tokens: List[int],
                  visible_caches: List[List[int]],
-                 cache_resources: List[float]):
+                 cache_resources: List[float],
+                 max_misses: int,
+                 cache_files: dict):
         self.files = files
         self.num_clients = num_clients
         self.num_caches = num_caches
@@ -84,3 +108,5 @@ class TestCase:
         self.cache_tokens = cache_tokens
         self.visible_caches = visible_caches
         self.cache_resources = cache_resources
+        self.max_misses = max_misses
+        self.cache_files = cache_files
