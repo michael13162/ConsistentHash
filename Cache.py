@@ -52,6 +52,7 @@ class Cache:
 
         load = (self.used_resources / self.total_resources) * 100
 
+        self.used_resources += file.size // 10
         return LoadReply(load, True)
 
     def handle_request(self, file: SimulatorFile, bandwidth: float = None):

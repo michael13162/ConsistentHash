@@ -53,4 +53,6 @@ if __name__ == "__main__":
 
     simulator = Simulator(case)
 
-    simulator.run()
+    trace = simulator.run()
+
+    simulator.visualize(trace)
