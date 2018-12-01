@@ -33,8 +33,9 @@ class TestCase:
                            num_caches: int,
                            simulation_length: int,
                            cache_resources: int,
-                           num_visible: int,
+			   num_visible: int,
                            max_misses: int,
+                           cuckoo: bool,
                            distribution_function) -> 'TestCase':
         """
         Generate a new, random test case
@@ -87,7 +88,8 @@ class TestCase:
 
 
         return TestCase(files, num_clients, num_caches, simulation_length, request_sequences, sorted_tokens,
-                        visible_caches, cache_resources, max_misses, cache_files)
+                        visible_caches, cache_resources, max_misses, cache_files, cuckoo)
+
 
     def __init__(self,
                  files: List[SimulatorFile.SimulatorFile],
@@ -99,7 +101,8 @@ class TestCase:
                  visible_caches: List[List[int]],
                  cache_resources: List[float],
                  max_misses: int,
-                 cache_files: dict):
+                 cache_files: dict,
+		 cuckoo: bool):
         self.files = files
         self.num_clients = num_clients
         self.num_caches = num_caches
@@ -110,3 +113,4 @@ class TestCase:
         self.cache_resources = cache_resources
         self.max_misses = max_misses
         self.cache_files = cache_files
+        self.cuckoo = cuckoo

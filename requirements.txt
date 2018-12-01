@@ -1,1 +1,10 @@
-matplotlib>=3.0.2
+cycler==0.10.0
+kiwisolver==1.0.1
+matplotlib==3.0.2
+numpy==1.15.1
+pyparsing==2.3.0
+python-apt==1.1.0b1+ubuntu0.16.4.2
+python-dateutil==2.7.5
+six==1.11.0
+ufw==0.35
+urllib3==1.23

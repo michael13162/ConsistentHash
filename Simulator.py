@@ -21,6 +21,7 @@
 from Cache import Cache
 from Client import Client
 from TestCase import TestCase
+import matplotlib.pyplot as plt
 
 
 class Simulator:
@@ -44,6 +45,10 @@ class Simulator:
                         for vis_caches, requests in zip(visible_caches, self.test_case.request_sequences)]
 
     def run(self):
+        trace = {}
+        for cache in self.caches:
+            trace[cache.token] = []
+
         # Do the simulator loop, for as long as the TestCase specifies
         for timestep in range(self.test_case.simulation_length):
             # Prepare all clients and caches for the new timestep
@@ -54,12 +59,27 @@ class Simulator:
             for client in self.clients:
                 file_idx = client.request_sequence[timestep]
                 if file_idx is not None:
-                    client.make_request(self.test_case.files[file_idx])
+                    client.make_request(self.test_case.files[file_idx], self.test_case.cuckoo)
 
             for cache in self.caches:
-                print(cache.token)
-                print("\t{}".format(cache.used_resources))
-                print("\t{}".format(cache.total_request_counter))
-                print("\t{}".format(cache.accepted_requests_counter))
-                print()
-            pass
+                trace[cache.token].append((cache.used_resources, cache.total_request_counter, cache.accepted_requests_counter))
+
+        return trace
+
+
+    def visualize(self, trace):
+        ratios = []
+
+        for timestep in range(self.test_case.simulation_length):
+            loads = sorted([trace[cache.token][timestep][0] for cache in self.caches])
+            ratios.append(loads[len(self.caches) - 1] / loads[0])
+
+        print(ratios)
+
+        fig = plt.figure()
+        plt.plot(ratios)
+        plt.title('Simulation results with ' + str(len(self.clients)) + ' clients, ' + str(len(self.caches)) + ' caches, and cuckoo=' + str(self.test_case.cuckoo))
+        plt.xlabel('timestep')
+        plt.ylabel('max load / min load ratio')
+        fig.savefig('cuckoo_' + str(self.test_case.cuckoo) + '.png')
+

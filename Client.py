@@ -44,19 +44,24 @@ class Client:
         # Clients do not store any per-timestep information, as yet!
         return
 
-    def make_request(self, file: SimulatorFile):
+    def make_request(self, file: SimulatorFile, cuckoo):
         # Get hash codes from file
         hash1: int = file.hash1()
         hash2: int = file.hash2()
 
         # Select server (Call 'accept_request' to both)
         cache1 = self.consistent_hash(hash1)
-        cache2 = self.consistent_hash(hash2)
+        if cuckoo:
+            cache2 = self.consistent_hash(hash2)
 
         response1 = cache1.accept_request(file)
-        response2 = cache2.accept_request(file)
+        if cuckoo:
+            response2 = cache2.accept_request(file)
 
-        cache = cache1 if response1.load < response2.load else cache2
+        if cuckoo:
+            cache = cache1 if response1.load < response2.load else cache2
+        else:
+            cache = cache1
 
         # Make request
         cache.handle_request(file)

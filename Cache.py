@@ -55,6 +55,9 @@ class Cache:
         self.total_request_counter += 1
 
         load = (self.used_resources / self.total_resources) * 100
+
+        self.used_resources += 5
+
         value = self.hosted_files.get(file.key)
         if value == None:
             self.hosted_files[file.key] = 1
