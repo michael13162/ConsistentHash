@@ -33,6 +33,7 @@ class TestCase:
                            num_caches: int,
                            simulation_length: int,
                            cache_resources: int,
+                           num_visible: int,
                            distribution_function) -> 'TestCase':
         """
         Generate a new, random test case
@@ -41,6 +42,8 @@ class TestCase:
 
         # Generate sequence of client file requests
         request_sequences = [[]] * num_clients
+        visible_caches = [[]] * num_clients
+        all_caches = [x in range(num_caches)]
         for client in range(num_clients):
             request_sequence = [None] * simulation_length
             # Test code: Every client has an 80% chance of requesting a file on a particular timestep
@@ -51,13 +54,18 @@ class TestCase:
                 file = distribution_function(len(files))
                 request_sequence[timestep] = file if file_requested else None
             request_sequences[client] = request_sequence
+            if num_visible < num_caches:
+                visible_caches[client] = random.sample(all_caches, num_visible)
+            else:
+                visible_caches[client] = all_caches
 
         # Generate tokens for each cache
         cache_tokens = [random.randint(0, SimulatorFile.MAX_HASH_VALUE) for cache in range(num_caches)]
 
         cache_resources = [cache_resources] * num_caches
 
-        return TestCase(files, num_clients, num_caches, simulation_length, request_sequences, cache_tokens, cache_resources)
+        return TestCase(files, num_clients, num_caches, simulation_length, request_sequences, cache_tokens,
+                        visible_caches, cache_resources)
 
     def __init__(self,
                  files: List[SimulatorFile.SimulatorFile],
@@ -66,6 +74,7 @@ class TestCase:
                  simulation_length: int,
                  request_sequences: List[List[Optional[int]]],
                  cache_tokens: List[int],
+                 visible_caches: List[List[int]],
                  cache_resources: List[float]):
         self.files = files
         self.num_clients = num_clients
@@ -73,4 +82,5 @@ class TestCase:
         self.simulation_length = simulation_length
         self.request_sequences = request_sequences
         self.cache_tokens = cache_tokens
+        self.visible_caches = visible_caches
         self.cache_resources = cache_resources

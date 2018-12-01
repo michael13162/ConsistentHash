@@ -63,6 +63,8 @@ if __name__ == "__main__":
                         help="Number of simulation steps")
     parser.add_argument("--cache-resources", action='store', type=int, required=True,
                         help="Available bandwidth on each cache")
+    parser.add_argument("--visible-caches", action='store', type=int, required=True,
+                        help="Number of caches each client can see")
 
     args = parser.parse_args()
 
@@ -73,6 +75,7 @@ if __name__ == "__main__":
         num_caches=args.num_caches,
         simulation_length=args.simulation_length,
         cache_resources=args.cache_resources,
+        visible_caches=args.visible_caches,
         distribution_function=uniform_distribution
     )
 
