@@ -65,7 +65,7 @@ class Simulator:
 
         fig = plt.figure()
         plt.plot(ratios)
-        plt.title('Simulation results with ' + str(self.clients) + ' client, ' + str(self.caches) + ' caches, and cuckoo=' + str(self.test_case.cuckoo))
+        plt.title('Simulation results with ' + str(len(self.clients)) + ' clients, ' + str(len(self.caches)) + ' caches, and cuckoo=' + str(self.test_case.cuckoo))
         plt.xlabel('timestep')
         plt.ylabel('max load / min load ratio')
         fig.savefig('cuckoo_' + str(self.test_case.cuckoo) + '.png')

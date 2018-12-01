@@ -26,7 +26,7 @@ from Simulator import Simulator
 from TestCase import TestCase
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser("Fall 2018 CS5150/CS6150 Consistent Hashing Project Simulator.  Command to try: python3.6 ConsistentHash.py --file-size=20 --file-count=100000 --num-clients=5000 --num-caches=10 --simulation-length=10 --cache-resources=100000")
+    parser = argparse.ArgumentParser("Fall 2018 CS5150/CS6150 Consistent Hashing Project Simulator.  Command to try: python3.6 ConsistentHash.py --file-size=20 --file-count=100000 --num-clients=5000 --num-caches=10 --simulation-length=100 --cache-resources=100000")
     parser.add_argument("--file-size", action='store', type=int, required=True,
                         help="Simulated request file size (Bytes)")
     parser.add_argument("--file-count", action='store', type=int, required=True,
