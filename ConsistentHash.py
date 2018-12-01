@@ -77,7 +77,7 @@ if __name__ == "__main__":
         num_caches=args.num_caches,
         simulation_length=args.simulation_length,
         cache_resources=args.cache_resources,
-        visible_caches=args.visible_caches,
+        num_visible=args.visible_caches,
         max_misses=args.max_misses,
         distribution_function=uniform_distribution
     )
