@@ -21,9 +21,33 @@
 # Description: Main executable for the ConsistentHash project
 
 import argparse
+import random
 
 from Simulator import Simulator
 from TestCase import TestCase
+
+def uniform_distribution(num):
+    '''
+    Creates a uniform distribution of file numbers for request
+
+    :param num: The range of numbers that can be chosen from
+    :return: int -- the chosen number
+    '''
+    return random.randint(0, num - 1)
+
+def inverse_proportional(num):
+    '''
+    Creates an inversely proportional distribution of the returned values
+
+    :param num: The range of numbers that can be chosen from
+    :return: int -- the chosen number
+    '''
+    r = random.random()
+    for i in range(num):
+        if r > 1.0/(i+1):
+            return i
+    return 0  # If it is smaller than the rest, just return 0
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Fall 2018 CS5150/CS6150 Consistent Hashing Project Simulator")
@@ -49,8 +73,10 @@ if __name__ == "__main__":
         num_caches=args.num_caches,
         simulation_length=args.simulation_length,
         cache_resources=args.cache_resources,
+        distribution_function=uniform_distribution
     )
 
     simulator = Simulator(case)
 
     simulator.run()
+

@@ -32,7 +32,8 @@ class TestCase:
                            num_clients: int,
                            num_caches: int,
                            simulation_length: int,
-                           cache_resources: int) -> 'TestCase':
+                           cache_resources: int,
+                           distribution_function) -> 'TestCase':
         """
         Generate a new, random test case
         """
@@ -47,7 +48,7 @@ class TestCase:
             # TODO: Select files based on realistic distribution
             for timestep in range(simulation_length):
                 file_requested = random.random() < 0.8
-                file = random.randint(0, len(files) - 1)
+                file = distribution_function(len(files))
                 request_sequence[timestep] = file if file_requested else None
             request_sequences[client] = request_sequence
 
