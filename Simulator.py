@@ -72,6 +72,8 @@ class Simulator:
 
         for timestep in range(self.test_case.simulation_length):
             loads = sorted([trace[cache.token][timestep][0] for cache in self.caches])
+            if loads[0] == 0:
+                loads[0] = 1
             ratios.append(loads[len(self.caches) - 1] / loads[0])
 
         print(ratios)
