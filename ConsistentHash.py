@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     simulator = Simulator(case)
     trace = simulator.run()
-    simulator.visualize(trace)
+    simulator.visualize(trace, 'cuckoo=False.png')
 
     case = TestCase.generate_test_case(
         file_size=args.file_size,
@@ -102,4 +102,4 @@ if __name__ == "__main__":
 
     simulator = Simulator(case)
     trace = simulator.run()
-    simulator.visualize(trace)
+    simulator.visualize(trace, 'cuckoo=True.png')

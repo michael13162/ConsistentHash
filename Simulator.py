@@ -67,7 +67,7 @@ class Simulator:
         return trace
 
 
-    def visualize(self, trace):
+    def visualize(self, trace, filename):
         ratios = []
 
         for timestep in range(self.test_case.simulation_length):
@@ -83,5 +83,5 @@ class Simulator:
         plt.title('Simulation results with ' + str(len(self.clients)) + ' clients, ' + str(len(self.caches)) + ' caches, and cuckoo=' + str(self.test_case.cuckoo))
         plt.xlabel('timestep')
         plt.ylabel('max load / min load ratio')
-        fig.savefig('cuckoo_' + str(self.test_case.cuckoo) + '.png')
+        fig.savefig(filename)
 
