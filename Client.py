@@ -35,13 +35,14 @@ class Client:
         """
         self.visible_caches = sorted(visible_caches, key=lambda c: c.token)
         self.request_sequence = request_sequence
+        self.complete_misses = 0
         pass
 
     def reset(self):
         """
         Clear all per-timestep information in the Client to prepare for the next timestep
         """
-        # Clients do not store any per-timestep information, as yet!
+        self.complete_misses = 0
         return
 
     def make_request(self, file: SimulatorFile, cuckoo):
@@ -58,13 +59,18 @@ class Client:
         if cuckoo:
             response2 = cache2.accept_request(file)
 
+        # Taking into account whether the server actually has the file or not,
+        # we make the request
         if cuckoo:
-            cache = cache1 if response1.load < response2.load else cache2
+            if response1.has_file and (not response2.has_file or response1.load < response2.load):
+                cache1.handle_request(file)
+            elif response2.has_file and (not response1.has_file or response2.load <= response1.load):
+                cache2.handle_request(file)
+            else:
+                self.complete_misses += 1
         else:
-            cache = cache1
-
-        # Make request
-        cache.handle_request(file)
+            if response1.has_file:
+                cache1.handle_request(file)
 
     def consistent_hash(self, hash: int) -> Cache:
         """

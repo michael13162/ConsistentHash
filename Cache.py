@@ -59,7 +59,7 @@ class Cache:
         self.used_resources += 5
 
         value = self.hosted_files.get(file.key)
-        if value == None:
+        if value is None:
             self.hosted_files[file.key] = 1
             self.miss_count += 1
             return LoadReply(load, False)
