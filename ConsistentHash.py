@@ -67,6 +67,8 @@ if __name__ == "__main__":
                         help="Number of caches each client can see")
     parser.add_argument("--max-misses", action='store', type=int, required=True,
                         help="Number of cache misses until the file is added to that cache")
+    parser.add_argument("--distribution", action='store', type=int, required=True,
+                        help="Distribution of file requests, 0 for uniform, 1 for inverse_proportional")
 
     args = parser.parse_args()
 
@@ -80,7 +82,7 @@ if __name__ == "__main__":
         num_visible=args.visible_caches,
         max_misses=args.max_misses,
         cuckoo=False,
-        distribution_function=uniform_distribution
+        distribution_function=uniform_distribution if args.distribution == 0 else inverse_proportional
     )
 
     simulator = Simulator(case)
