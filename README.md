@@ -23,8 +23,7 @@ environment:
 
 Run `ConsistentHash.py --help` for command-line parameter descriptions
 
-After the simulation runs, you should be greeted with pretty graphs
-summarizing the results of the experiment!
+After the simulation runs, image files with the simulation results will be written to the working directory.
 
 ## Features:
   - Consistent hashing, as described by Karger et al.
