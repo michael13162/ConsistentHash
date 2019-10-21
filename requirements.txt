@@ -7,4 +7,4 @@ python-apt==1.1.0b1+ubuntu0.16.4.2
 python-dateutil==2.7.5
 six==1.11.0
 ufw==0.35
-urllib3==1.23
+urllib3==1.24.2
